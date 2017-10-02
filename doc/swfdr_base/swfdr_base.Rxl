@@ -1,0 +1,137 @@
+#################################################################################
+## roxygen-lite source annotation file for swfdr_base.R
+#################################################################################
+##
+## Author:  Nat Goodman
+## Copyright (C) 2017 Nat Goodman
+##
+## This software is open source, distributed under the MIT License. See LICENSE
+## file at https://github.com/natgoodman/NewPro/FDR/LICENSE
+##
+#################################################################################
+
+## ---- run ----
+Run the program. 
+
+Top-level function. Sets parameters (via `init`), does the work (via `doit`) and optionally saves the results (via `saveit`).
+
+Try some math: $x + alpha$. $x \times beta$
+
+@param ... parameters passed to `init`
+@default ... see `init`
+
+@return This function is invoked for its side-effect. It has no return value.
+
+@examples
+# this code block assumes your working directory is the root of the repository
+
+source("script/swfdr_base.R");
+# run default process
+run();
+
+# run default process and save results in directories data/guide01 and figure/guide01
+run(save=T,datadir='data/guide01',figdir='figure/guide01');
+
+# reduce runtime by reducing number of simulation runs and simulated cases
+run(m=1e3,d=c(0.25,0.5,1),prop.true=c(0.3,0.5,0.8));
+
+# specify power directly and let program adjust effect size
+run(m=1e3,pwr=c(0.1,0.3,0.8),prop.true=c(0.3,0.5,0.8));
+
+@seealso [init] for more information.
+
+## ---- init ----
+Initialize program parameters. 
+
+Processes parameters and stores them in global variables. Creates parameter grid, called `cases`, containing all combinations of  parameters. Creates output directories if they do not exist.
+
+For the default parameters, the `cases` parameter grid expands to 25 cases (5 values of prop.true x 5 values of d; all other parameters have single-valued defaults). We do 10,000 simulations for each case for a total of 250,000 simulations. This takes about 3 minutes on my small Linux server.
+
+This function is usually called by `run`. It may be called directly if the user wishes to perform custom initialization.
+
+@param prop.true fraction of cases where where there is a real effect.
+@param m number of iterations.
+@param n sample size.
+@param d standardized effect size (aka *Cohen's d*)
+@param pwr power. if set, program adjusts `d` to achieve power.
+@param sig.level significance level for power calculation
+@param pval.plot p-values for which we plot results
+@param scriptname script name. Used to construct output directory path names.
+@param datadir path name of directory for data files.
+@param figdir path name of directory for plots.
+@param save logical. sets `save.rdata` and `save.plot` 
+@param save.rdata if TRUE, save parameters and results (actually, all global variables) in RData format. The output filename is `globals.RData` in directory `datadir`.
+@param save.txt save simulation and interpolation results as tab-delimited text files. The output filenames are `sim.txt` amd `interp.txt` in directory `datadir`. **CAUTION: big & slow!**
+@param save.plot if TRUE, save plots as png files in `figdir`. The output filenames are `plot_byd.png`, `plot_byprop.png`, `plot_vsd.png`, `plot_vsprop.png`
+@param clean logical. sets `clean.data` and `clean.fig`.
+@param clean.data if TRUE, delete contents of datadir and start fresh
+@param clean.fig if TRUE, delete contents of figdir and start fresh
+
+@default datadir "data/swfdr_base"
+@default figdir "figure/swfdr_base"
+
+@return The `cases` data frame is returned invisibly.
+
+@examples
+# initialize parameters with default values
+init();
+
+# initialize parameters with default values but save results in directories data/guide01 and plots in figure/guide01
+init(save=T,datadir='data/guide01',figdir='figure/guide01');
+
+# initialize parameters with values requiring less runtime by reducing number of simulation runs and simulated cases
+init(m=1e3,d=c(0.25,0.5,1),prop.true=c(0.3,0.5,0.8));
+
+# specify power directly and let program adjust effect size
+init(m=1e3,pwr=c(0.1,0.3,0.8),prop.true=c(0.3,0.5,0.8));
+
+@usage
+init(prop.true = seq(0.1, 0.9, by = 0.2),
+     m = 10000,
+     n = 16,
+     d = c(0.25, 0.5, 0.75, 1, 2),
+     pwr = NA, sig.level = 0.05,
+     pval.plot = c(0.001, 0.01, 0.03, 0.05, 0.1),
+     scriptname = "swfdr_base",
+     datadir = file.path("data", scriptname),
+     figdir = file.path("figure", scriptname),
+     save = F, save.rdata = save, save.txt = F, save.plot = save,
+     clean = F, clean.data = clean, clean.fig = clean)
+
+@export
+@function init
+
+## ---- doit ----
+Do the work.
+
+Runs simulation (via `dosim`), interpolates relevant columns of the simulation results at fixed p-values (via `dointerp`), and plots the results and optionally save the plots (via `doplot`).
+
+@return This function is invoked for its side-effect. It has no return value.
+@export
+@function doit
+
+## ---- Plot Functions ----
+Plot the results
+
+These functions operate on the `sim` and `interp` data frames produced by `dosim` and `dointerp` 
+respectively. 
+
+`doplot` is the main plot function. It calls separate functions for each of the four kinds of plot. 
+* `plot_byprop` plots FDR by prop.true for one value of d
+* `plot_byd` plots FDR by d for one value of prop.true
+* `plot_vsprop` plots FDR vs prop.true for one value of d at fixed p-values
+* `plot_vsd` plots FDR vs d for one value of prop.true at fixed p-values
+
+Each of the `plot_` functions plots a different slice of theoretical and empirical FDR as a function of three variables: FDR=f(prop.true,d,pval) The functions differ in how they reduce four dimensions (FDR and the three variables) to something that can be plotted in two dimensions.
+
+Each function starts by fixing one variable to a single value. Next, the function splits the data into groups based on a second variable. Finally, it plots each group vs. the remaining variable, using different line types (solid vs dashed) to distinguish theoretical and empirical FDR.
+
+`plot_byprop` and `plot_byd` operate on `sim`; `plot_vsprop` and `plot_vsd` operate on `interp`.
+
+@param save.plot if TRUE, save the plot. The output format is PNG. The output filename is the name of the function with `.png` suffix  in directory `figdir`, eg, `figure/plot_byprop.png`.
+@param d1 fixed value of `d` for dimension reduction. If `d1` is not in the `d` vector, it is set d1 to `max(d)`.
+@param prop.true1 fixed value of `prop.true` for dimension reduction. If `prop.true` is not in the `prop.true` vector, it is set to the first value in `prop.true`.
+@param sig.level values of p-value and FDR marked by dashed lines on the plot.
+
+@export
+@function doplot plot_byprop plot_byd plot_vsprop plot_vsd

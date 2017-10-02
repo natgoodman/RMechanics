@@ -1,0 +1,29 @@
+```{r echo=FALSE, eval=FALSE}
+#################################################################################
+## R markdown User Guide argument table child document generated from 
+## script/swfdr_base.Rxl and script/swfdr_base.R by tool/rdoc.pl.
+#################################################################################
+##
+## Author:  Nat Goodman
+## Copyright (C) 2017 Nat Goodman
+##
+## This software is open source, distributed under the MIT License. See LICENSE
+## file at https://github.com/natgoodman/NewPro/FDR/LICENSE
+##
+#################################################################################
+```
+\begingroup
+\setlength{\tabcolsep}{10pt}
+\renewcommand{\arraystretch}{1.2}
+\centering
+\begin{tabular}{m{\dimexpr0.15\columnwidth-\columnsep}m{\dimexpr0.50\columnwidth-\columnsep}m{\dimexpr0.25\columnwidth-\columnsep}}
+\toprule
+argument & meaning & default\\
+\midrule
+\texttt{save.plot} & if TRUE, save the plot. The output format is PNG. The output filename is the name of the function with \texttt{.png} suffix  in directory \texttt{figdir}, eg, \texttt{figure/plot\_byprop.png}. & \texttt{FALSE} \\
+\texttt{d1} & fixed value of \texttt{d} for dimension reduction. If \texttt{d1} is not in the \texttt{d} vector, it is set d1 to \texttt{max(d)}. & \texttt{1} \\
+\texttt{prop.true1} & fixed value of \texttt{prop.true} for dimension reduction. If \texttt{prop.true} is not in the \texttt{prop.true} vector, it is set to the first value in \texttt{prop.true}. & \texttt{0.5} \\
+\texttt{sig.level} & values of p-value and FDR marked by dashed lines on the plot. & \texttt{0.05} \\
+\bottomrule
+\end{tabular}
+\endgroup

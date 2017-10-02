@@ -1,0 +1,64 @@
+```{r echo=FALSE, eval=FALSE}
+#################################################################################
+## R markdown User Guide child document generated from 
+## script/swfdr_base.Rxl and script/swfdr_base.R by tool/rdoc.pl.
+#################################################################################
+##
+## Author:  Nat Goodman
+## Copyright (C) 2017 Nat Goodman
+##
+## This software is open source, distributed under the MIT License. See LICENSE
+## file at https://github.com/natgoodman/NewPro/FDR/LICENSE
+##
+#################################################################################
+```
+
+
+### `run` - *Run the program.*
+
+#### Description
+
+Top-level function. Sets parameters (via `init`), does the work (via `doit`) and optionally saves the results (via `saveit`)
+
+#### Usage
+
+```{r eval=FALSE}
+run=function(...)
+```
+
+#### Arguments
+```{r echo=FALSE, eval=FALSE}
+| argument      | meaning                                      | default       |
+| ------------- | -------------------------------------------- | ------------- |
+| `...` | parameters passed to `init` | see `init` |
+
+```
+```{r child=argtable('run.swfdr_base.argtable')}
+```
+
+#### Value
+
+This function is invoked for its side-effect. It has no return value.
+
+#### Examples
+
+```{r eval=FALSE}
+# this code block assumes your working directory is the root of the repository
+
+source("script/swfdr_base.R");
+# run default process
+run();
+
+# run default process and save results in directories data/guide01 and figure/guide01
+run(save=T,datadir='data/guide01',figdir='figure/guide01');
+
+# reduce runtime by reducing number of simulation runs and simulated cases
+run(m=1e3,d=c(0.25,0.5,1),prop.true=c(0.3,0.5,0.8));
+
+# specify power directly and let program adjust effect size
+run(m=1e3,pwr=c(0.1,0.3,0.8),prop.true=c(0.3,0.5,0.8));
+```
+
+#### See Also
+
+[`init`](#init) for more information.

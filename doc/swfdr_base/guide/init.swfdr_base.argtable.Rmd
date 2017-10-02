@@ -1,0 +1,33 @@
+```{r echo=FALSE, eval=FALSE}
+#################################################################################
+## R markdown User Guide argument table child document generated from 
+## script/swfdr_base.Rxl and script/swfdr_base.R by tool/rdoc.pl.
+#################################################################################
+##
+## Author:  Nat Goodman
+## Copyright (C) 2017 Nat Goodman
+##
+## This software is open source, distributed under the MIT License. See LICENSE
+## file at https://github.com/natgoodman/NewPro/FDR/LICENSE
+##
+#################################################################################
+```
+| argument      | meaning                                      | default       |
+| ------------- | -------------------------------------------- | ------------- |
+| `prop.true` | fraction of cases where where there is a real effect. | `seq(0.1, 0.9, by = 0.2)` |
+| `m` | number of iterations. | `1e4` |
+| `n` | sample size. | `16` |
+| `d` | standardized effect size (aka *Cohen's d*) | `c(0.25, 0.5, 0.75, 1, 2)` |
+| `pwr` | power. if set, program adjusts `d` to achieve power. | `NA` |
+| `sig.level` | significance level for power calculation | `0.05` |
+| `pval.plot` | p-values for which we plot results | `c(1e-03, 0.01, 0.03, 0.05, 0.1)` |
+| `scriptname` | script name. Used to construct output directory path names. | `"swfdr_base"` |
+| `datadir` | path name of directory for data files. | `"data/swfdr_base"` |
+| `figdir` | path name of directory for plots. | `"figure/swfdr_base"` |
+| `save` | logical. sets `save.rdata` and `save.plot` | `FALSE` |
+| `save.rdata` | if TRUE, save parameters and results (actually, all global variables) in RData format. The output filename is `globals.RData` in directory `datadir`. | `FALSE` (set by `save`) |
+| `save.txt` | save simulation and interpolation results as tab-delimited text files. The output filenames are `sim.txt` amd `interp.txt` in directory `datadir`. **CAUTION: big & slow!** | `FALSE` |
+| `save.plot` | if TRUE, save plots as png files in `figdir`. The output filenames are `plot_byd.png`, `plot_byprop.png`, `plot_vsd.png`, `plot_vsprop.png` | `FALSE` (set by `save`) |
+| `clean` | logical. sets `clean.data` and `clean.fig`. | `FALSE` |
+| `clean.data` | if TRUE, delete contents of datadir and start fresh | `FALSE` (set by `clean`) |
+| `clean.fig` | if TRUE, delete contents of figdir and start fresh | `FALSE` (set by `clean`) |

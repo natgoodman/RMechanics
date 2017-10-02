@@ -1,0 +1,63 @@
+```{r echo=FALSE, eval=FALSE}
+#################################################################################
+## R markdown User Guide child document generated from 
+## script/swfdr_base.Rxl and script/swfdr_base.R by tool/rdoc.pl.
+#################################################################################
+##
+## Author:  Nat Goodman
+## Copyright (C) 2017 Nat Goodman
+##
+## This software is open source, distributed under the MIT License. See LICENSE
+## file at https://github.com/natgoodman/NewPro/FDR/LICENSE
+##
+#################################################################################
+```
+<span id=doplot></span><span id=plot_byprop></span><span id=plot_byd></span><span id=plot_vsprop></span><span id=plot_vsd></span>
+
+### Plot Functions - *Plot the results*
+
+#### Description
+
+These functions operate on the `sim` and `interp` data frames produced by `dosim` and `dointerp` 
+respectively.
+
+#### Usage
+
+```{r eval=FALSE}
+doplot=function(save.plot=F)
+
+plot_byprop=function(save.plot=F,d1=1,sig.level=.05)
+
+plot_byd=function(save.plot=F,prop.true1=0.5,sig.level=.05)
+
+plot_vsprop=function(save.plot=F,d1=1,sig.level=.05)
+
+plot_vsd=function(save.plot=F,prop.true1=0.5,sig.level=.05)
+```
+
+#### Arguments
+```{r echo=FALSE, eval=FALSE}
+| argument      | meaning                                      | default       |
+| ------------- | -------------------------------------------- | ------------- |
+| `save.plot` | if TRUE, save the plot. The output format is PNG. The output filename is the name of the function with `.png` suffix  in directory `figdir`, eg, `figure/plot_byprop.png`. | `FALSE` |
+| `d1` | fixed value of `d` for dimension reduction. If `d1` is not in the `d` vector, it is set d1 to `max(d)`. | `1` |
+| `prop.true1` | fixed value of `prop.true` for dimension reduction. If `prop.true` is not in the `prop.true` vector, it is set to the first value in `prop.true`. | `0.5` |
+| `sig.level` | values of p-value and FDR marked by dashed lines on the plot. | `0.05` |
+
+```
+```{r child=argtable('plot-functions.swfdr_base.argtable')}
+```
+
+#### Details
+
+`doplot` is the main plot function. It calls separate functions for each of the four kinds of plot. 
+* `plot_byprop` plots FDR by prop.true for one value of d
+* `plot_byd` plots FDR by d for one value of prop.true
+* `plot_vsprop` plots FDR vs prop.true for one value of d at fixed p-values
+* `plot_vsd` plots FDR vs d for one value of prop.true at fixed p-values
+
+Each of the `plot_` functions plots a different slice of theoretical and empirical FDR as a function of three variables: FDR=f(prop.true,d,pval) The functions differ in how they reduce four dimensions (FDR and the three variables) to something that can be plotted in two dimensions.
+
+Each function starts by fixing one variable to a single value. Next, the function splits the data into groups based on a second variable. Finally, it plots each group vs. the remaining variable, using different line types (solid vs dashed) to distinguish theoretical and empirical FDR.
+
+`plot_byprop` and `plot_byd` operate on `sim`; `plot_vsprop` and `plot_vsd` operate on `interp`.

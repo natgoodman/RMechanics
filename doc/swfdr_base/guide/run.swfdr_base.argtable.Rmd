@@ -1,0 +1,17 @@
+```{r echo=FALSE, eval=FALSE}
+#################################################################################
+## R markdown User Guide argument table child document generated from 
+## script/swfdr_base.Rxl and script/swfdr_base.R by tool/rdoc.pl.
+#################################################################################
+##
+## Author:  Nat Goodman
+## Copyright (C) 2017 Nat Goodman
+##
+## This software is open source, distributed under the MIT License. See LICENSE
+## file at https://github.com/natgoodman/NewPro/FDR/LICENSE
+##
+#################################################################################
+```
+| argument      | meaning                                      | default       |
+| ------------- | -------------------------------------------- | ------------- |
+| `...` | parameters passed to `init` | see `init` |

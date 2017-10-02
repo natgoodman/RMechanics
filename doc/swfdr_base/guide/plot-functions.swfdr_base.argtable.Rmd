@@ -1,0 +1,20 @@
+```{r echo=FALSE, eval=FALSE}
+#################################################################################
+## R markdown User Guide argument table child document generated from 
+## script/swfdr_base.Rxl and script/swfdr_base.R by tool/rdoc.pl.
+#################################################################################
+##
+## Author:  Nat Goodman
+## Copyright (C) 2017 Nat Goodman
+##
+## This software is open source, distributed under the MIT License. See LICENSE
+## file at https://github.com/natgoodman/NewPro/FDR/LICENSE
+##
+#################################################################################
+```
+| argument      | meaning                                      | default       |
+| ------------- | -------------------------------------------- | ------------- |
+| `save.plot` | if TRUE, save the plot. The output format is PNG. The output filename is the name of the function with `.png` suffix  in directory `figdir`, eg, `figure/plot_byprop.png`. | `FALSE` |
+| `d1` | fixed value of `d` for dimension reduction. If `d1` is not in the `d` vector, it is set d1 to `max(d)`. | `1` |
+| `prop.true1` | fixed value of `prop.true` for dimension reduction. If `prop.true` is not in the `prop.true` vector, it is set to the first value in `prop.true`. | `0.5` |
+| `sig.level` | values of p-value and FDR marked by dashed lines on the plot. | `0.05` |

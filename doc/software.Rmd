@@ -1,0 +1,204 @@
+---
+title: 'Software: Science-Wise False Discovery Rate'
+author: "Nathan (Nat) Goodman"
+date: "June 1, 2017"
+output:
+  html_document:
+    code_folding: hide
+    css: css/html_document.css
+    highlight: kate
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: 3
+linkcolor: cyan
+citecolor: green
+urlcolor: blue
+---
+```{r echo=FALSE,include=FALSE,cache=FALSE}
+## setup variables for documentation paths
+knitr::read_chunk('../tool/doclink.R');
+knitr::read_chunk('../tool/codelink.R');
+```
+```{r echo=FALSE,include=FALSE,cache=FALSE}
+<<doclink>>
+<<codelink>>
+```
+
+*This document discusses software related topics, including installation and usage, design and design choices, programming style, and documentation scheme for the collection of scripts and related packages in [my GitHub SWFDR repository](https://github.com/natgoodman/SWFDR). The base script is `swfdr_base.R` (corresponding to package `SWFDRbase`), a simple implementation that uses base R capabilities only. Other scripts and packages extend the base implementation by providing solutions to some of the [Exercises for the Reader](`r exercises`). Please see the companion document [Science: Science-Wise False Discovery Rate](`r science`) for a discussion of scientific and statistical aspects of the work.* 
+
+## Introduction
+
+The *false discovery rate* (*FDR*) is the probability that a significant p-value indicates a false positive, or equivalently, the proportion of significant p-values that correspond to results without a real effect. FDR estimation is routinely used in genomics for multiple test correction in large scale experiments. 
+
+Some time ago I wrote a quick-and-dirty R script that compared FDR estimations methods used in genomics on simulated data. I decided to adapt this program to explore the notion of science-wise false discovery rate as explained in the companion document [Science: Science-Wise False Discovery Rate](`r science`). 
+
+Beyond the interesting science, I thought this would be a good example to get my feet wet in the world of didactic R software aimed at web users. I cleaned up the code, splitting off a simple core and casting the rest as [Exercises for the Reader](`r exercises`). I put the code in a [GitHub repository](https://github.com/natgoodman/SWFDR) and wrote documentation the "R way", as well as "my way". Along the way, I expanded my paltry knowledge of GitHib mechanics, discovered the amazing value of GitHub Pages, and learned R documentation tools from scratch. A big omission is testing; I intended to include formal tests but ran out of steam.
+
+I hope the software will be a good example for readers who have some R experience but aren’t experts. The base script, `swfdr_base.R`, is a simple implementation; the others extend the base in small steps. Most of the scripts use base R capabilities only and will run "out of the box" on any reasonably modern R installation. The software (mostly) conforms to good software engineering practice: it uses a simple, consistent coding style with lots of comments, and consists of small functions with well-defined purposes and clear interfaces (i.e., inputs and outputs). 
+
+The distribution provides the software as a collection of functions meant for interactive use, similar to what a non-expert R user is likely to write. It also provides the software as R packages which can be loaded as source packages (via `devtools::load_all`) or installed and loaded by `library`. The main advantage of the package form is that the R help system will work, e.g., you can type `help(run)` to get help on the `run` function.
+
+I encourage reader-programmers to download the code, try it out, and modify it to do more. To this end, please see [Exercises for the Reader](`r exercises`) for ideas on possible extensions. The software is open source, released under the MIT license, which means you can do almost anything you want with it. I’d love to see your improvements if you choose to share them, but you are under no obligation to do so.
+
+## Where's the Code
+
+- The `R/` subdirectory of the distribution contains the raw source code in script form
+- The `pkg/` subdirectory contains the code in package form
+- For each script, there are also HTML and PDF documents containing the code as formatted text. E.g. for `swfdr_base.R`, the code documents are [doc/swfdr_base/code.html](swfdr_base/code.html) and [doc/swfdr_base/code.pdf](swfdr_base/code.pdf).
+
+## Installation and Usage
+
+The simplest way to get the software is to [download](https://github.com/natgoodman/FDR/archive/master.zip) the repository. You can also clone it using this URL: <https://github.com/natgoodman/FDR.git>.
+
+The `R/` subdirectory of the distribution contains the software as scripts, each of which is a collection of functions meant for interactive use, similar to what a non-expert R user is likely to write. The `pkg/` subdirectory contains the code in package form as source directories (e.g `pkg/swfdr_base`) and tarballs (e.g. `pkg/swfdr_base.tar.gz`). 
+
+To load the script form, simply `source` the file into your R session as shown below.  Easy peasy.
+``` {r eval=FALSE}
+## This code block assumes your working directory is the root of the distribution.
+
+source('R/swfdr_base.R');
+```
+The only real disadvantage of the script form (for simple cases) is that the R help system doesn't work; e.g. you can't say `help(run)` to get help on the `run` function. This is not a big problem in practice, since equivalent documentation is available online (see [Documentation Index](`r docindex`)). The distribution provides the code in package form so you can see what it looks like should that be of interest. 
+
+Loading the package form is dead simple if you have [Wickham et al's `devtools` package](https://cran.r-project.org/web/packages/devtools) installed; simply use `devtools::load_all` to load it from the distribution.
+``` {r eval=FALSE}
+## This code block assumes your working directory is the root of the distribution and that devtools is installed.
+
+devtools::load_all('pkg/swfdr_base');
+```
+An alternative is to use R's `install.packages` to install the tarball. The only trick is making sure the package gets installed in a reasonable place. I like to use the `lib/` subdirectory of the distribution for software like this to avoid polluting my real library with toy examples, but you're free to put it wherever you want.  (You need write permission where you store it, unless you use `sudo` or have your sys admin do it for you.) 
+
+You can control the installation location by configuring your R library paths via the `.libPaths()` function or by setting the `lib` parameter to `install.packages`. In the latter case, you also have to set the `lib.loc` parameter to `library`.
+
+After installing the package, you load it with `library`. One subtlety is that the package names differ from the script names, because, for reasons I don't understand, R does not permit `_` in package names. I chose an obvious mapping of script names to package names: capitalize 'SWFDR', drop the `_`, and append the rest in lower case. Thus, `swfdr_base` becomes `SWFDRbase` and so forth.
+
+I will illustrate both ways of controlling the installation location. First, using `.libPaths()`.
+``` {r eval=FALSE}
+## This code block assumes your working directory is the root of the distribution.
+## It installs the package in the lib/ subdirectory by setting .libPaths
+
+.libPaths('lib');
+install.packages('pkg/swfdr_base.tar.gz');
+```
+
+``` {r eval=FALSE}
+## This code block assumes your working directory is the root of the distribution.
+## It loads the package from the lib/ subdirectory by setting .libPaths
+
+.libPaths('lib');
+library(swfdrBase);
+```
+Now by setting parameters in the calls to `install.packages` and `library`.
+``` {r eval=FALSE}
+## This code block assumes your working directory is the root of the distribution.
+## It installs the package in the lib/ subdirectory by setting the lib parameter
+
+install.packages('pkg/swfdr_base.tar.gz',lib='lib');
+```
+
+``` {r eval=FALSE}
+## This code block assumes your working directory is the root of the distribution.
+## It loads the package from the lib/ subdirectory by setting the lib.loc parameter
+
+library(swfdrBase,lib.loc='lib');
+```
+
+No matter which way you load the software, you run it by invoking the `run` function.
+
+``` {r eval=FALSE}
+## This code block assumes you've loaded the software using one of the methods above.
+## It runs the software with default parameters.
+
+run();
+```
+
+In the case of `swfdr_base.R` (or equivalently the `SWFDRbase` package) this will produce four graphs similar to the ones below.  The default computation performs $2.5 \times 10^5$ simulations taking about 3 minutes on my small Linux server.
+
+```{r out.width="50%",echo=FALSE,fig.show='asis'}
+knitr::include_graphics('../figure/swfdr_base/plot_byprop.png');
+knitr::include_graphics('../figure/swfdr_base/plot_byd.png');
+knitr::include_graphics('../figure/swfdr_base/plot_vsprop.png');
+knitr::include_graphics('../figure/swfdr_base/plot_vsd.png');
+```
+
+The notation is
+
+-  solid lines show theoretical results; dashed lines are empirical results from the simulation 
+-  *fdr*. false discovery rate
+-  *pval*. p-value cutoff for significance
+-  *prop.true*. proportion of simulated cases that have a real effect
+-  *d*. standardized effect size, aka *Cohen's d*
+
+## Programming Style
+
+If you examine the software, you'll notice that my R code looks different from other examples out there and eschews many recommendations in well-respected R style guides by [Wickham](http://adv-r.had.co.nz/Style.html) and [Google](https://google.github.io/styleguide/Rguide.xml). One obvious difference is that my code is scrunched with less whitespace than others. I do not break code into separate files for each function (although in more complex programs, I organize the code into logically separate files). I include minimal documentation of function inputs and outputs, putting detailed function-level (API) documentation elsewhere. I use `=` instead of `<-`, end statements with semi-colons, prefer `'` over `"`, use `.` as a word separator in variable names and `_` in function names, and start full-line comments with `##`.
+
+Programming style is a matter of taste (unless your boss foists a style on you). My style works for me. As you gain experience, I encourage you to find a style that works for you.
+
+That said, I will share the rationale for my choices to illuminate the issues. 
+
+Code should tell a story, and the audience for that story are programmers (including me!) who want to **understand** the code. The most important element is the code itself, meaning the words and syntactic constructs that comprise the program. Whitespace is secondary: I use just enough whitespace to make the code legible. Consistent indentation is essential as this reveals the logical structure of the code.  Two spaces per level is enough to show the structure; more just wastes space.  I'm happy for comments that explain subtle twists but see no need for obvious remarks. Over the years, I've come to appreciate the value of leaving breadcrumbs explaining recent changes to the code as well as mentioning features that should be there but aren't. 
+
+Files are the chapters of the story. Simple programs like the ones here are short stories and generally need no chapter level organization, i.e. the whole program naturally belongs in a single file. Within a file, I try to arrange the code (mostly functions) in a logical order that matches the story.
+
+Detailed function-level documentation, also known as API documentation, is meant for a different audience: programmers who want to **use** the code. Embedding this documentation in the code interrupts the story.
+
+The remaining points (`=` instead of `<-` and so forth) reflect tradeoffs among several goals. 
+
+1. I program in multiple languages in addition to R (mostly Perl and PHP these days) and try to avoid gratuitous differences that trip me up. Since these other languages use `=` for assignment, `;` to end statements, and `'` for simple strings, I do the same in R. 
+
+2. The flip side is that I want to be facile in each language (to "speak like a native", as it were), which means taking advantage of language features. This pushes me to avoid putting `{` and `}` around the arms of every `if` statement as other languages require even though this a gratuitous difference I could avoid. I absolutely do not try to program the exact same way in all languages as this would reduce to pidgin programming.
+
+3. A feature I really love in Perl, PHP, and other languages is that one can use the same name for both a variable and a function (albeit at the cost of prefixing the name with a funny special symbol when used for a variable in Perl or PHP). This is not possible in R for excellent technical reasons, so I use `.` vs. `_` in names as a workaround. Thus, I use `fdr.theo` for a variable containing a theoretical FDR and `fdr_theo` for the function that computes it.
+
+4. The business about `##` for full-line comments is utterly prosaic: the program editor I use, Emacs, needs this to indent code correctly.  There's probably a way to fix this, but I've never gotten around to figuring it out.
+
+5. I am obsessively consistent in matters of style. When I make a choice like `.` vs. `_` , I do it everywhere. I've learned the hard way that inconsistent style confuses me and leads to dumb mistakes.
+
+As I said, these choices work for me. They may not work for you. That's okay. 
+
+## Documentation Scheme
+
+### Documents
+
+The distribution provides several types of documents aimed at different, partially overlapping, audiences.
+
+1. GitHub-centric documents meant for people browsing the repository to help them decide whether to dig deeper. These are [README](`r README`) providing a concise summary of the repository and [NEWS](`r NEWS`) listing major differences between releases.
+
+2. Conceptual documents for people interested in the topic but not necessarily the software *per se*. These are this document on software-related topics and the companion document [Science: Science-Wise False Discovery Rate](`r science`) discussing scientific and statistical aspects of the work.
+
+3. API documentation for each script and corresponding package for programmers who want to use the software, or perhaps adapt the API for purposes of their own, but who may not want to read the code.
+  - R-style reference manual describing what each function does, how to call it, and what it returns. E.g. for `swfdr_base.R`, the reference manual is [here](`r refman('swfdr_base')`). The reference manual contains all functions in a single document. It's divided into sections describing a single function or group of related functions and lists the sections in alphabetical order. 
+  - R-style man pages containing the exact same information but with a separate document for each section. E.g., for `swfdr_base.R`, the man page for the `run` function is [here](`r man('swfdr_base','run')).
+Man pages are what the R `help` function displays. Also, many websites store copies of R man pages which they happily display in response to web searches, c.f. [web documentation of grep](https://stat.ethz.ch/R-manual/R-devel/library/base/html/grep.html), which I found by Googling  "R grep".
+  - API Guide. This is similar to the reference manual but also has material explaining how to use the program as a whole and organizes the sections in a logical order reflecting how one uses the program. This type of documentation is *de rigueur* in the programming world at large, but somehow the academic R community missed the memo. E.g. for `swfdr_base.R`, the API Guide is [here](`r guide('swfdr_base')`). Although it largely duplicates the R-style documentation, I decided to include it so readers could compare conventional API documentation to the R-style analog.
+  
+4. Software internals documentation for each script and package describing the software organization and showing the code itself. E.g. for `swfdr_base.R`, these documents are [Software Internals: swfdr_base.R and SWFDRbase](`r internals('swfdr_base')`) and 
+[Code: swfdr_base.R and SWFDRbase](`r code('swfdr_base')`). These documents are meant for programmers who want to read and understand the code.
+
+5. [Exercises for the Reader](`r exercises`) for programmers who want to improve the code or use the software and documentation to improve their skills. This document suggests ways for reader-programmers to improve the program. Other scripts in the distribution extend the base implementation with solutions to some of the exercises.
+
+There's also a [Documentation Index](`r docindex`) with links to all the documents.
+
+### Document Formats
+
+The distribution provides most documents in HTML and PDF formats. README and NEWS in the respository root are in Markdown (md) format to conform with GitHub convention. GitHub converts Markdown files to HTML when you view the file and automatically displays README.md (as HTML) when you browse the repository.
+
+The input format for most documents is [R Markdown](http://rmarkdown.rstudio.com)(Rmd) from Wickham and colleagues at RStudio. Function `rmarkdown::render()` in the [Wickham et al's rmarkdown package](https://cran.r-project.org/web/packages/rmarkdown) converts Rmd files into the desired output formats. If you're an RStudio user, you can invoke the function by pushing the "Knit" button.
+
+When I started writing the API documentation, I was stunned to learn that R aficionados don't use Rmd for this. Even the RStudio people who invented Rmd don't use it.  Instead, they use a format called [roxygen](https://cran.r-project.org/web/packages/roxygen2/vignettes/roxygen2.html)(Rox), which is converted by `devtools::document()` or `roxygen2::roxygenise()` into yet another format, [Rd](https://cran.r-project.org/doc/manuals/R-exts.html#Rd-format), which is converted by base R functions into R-style API documentation (reference manual and man pages). 
+
+A key feature of Rox vs. Rd is that it lets you embed API documentation in code - actually, it pretty much forces you to do so.  Since I don't like to put documentation in the code (see [Programming Style](#programming_style) above), this is a non-starter for me. To overcome this non-feature, I defined my own Rox-like format (Rxl) and wrote a translator to convert Rxl into Rox. The translator also converts Rxl into Rmd which I insert into the "my style" API Guide to avoid having to write the function-level documentation twice. 
+
+**Rxl format and translators are rudimentary**, definitely not ready for prime time.  Should you be interested in using these, please contact me and I'll work with you to make it possible.
+
+### Where's the Documentation 
+
+- The `doc/` subdirectory tree of the distribution contains the documentation source files (Rmd and Rxl). It also contains HTML and PDF versions suitable for viewing on your local computer.
+- README and NEWS (Rmd and md) are also in the root of the distribution to conform with GitHub convention.
+- [My GitHub Pages SWFDR site](https://natgoodman.github.io/SWFDR) and [my personal SWFDR website](http://hddrugworks.org/ngoodman/NewPro/SWFDR) contain the documentation in HTML and PDF suitable for viewing on the web.
+
+## Conclusion or Wrap-up TBD

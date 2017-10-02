@@ -1,0 +1,42 @@
+```{r echo=FALSE, eval=FALSE}
+#################################################################################
+## R markdown User Guide argument table child document generated from 
+## script/swfdr_base.Rxl and script/swfdr_base.R by tool/rdoc.pl.
+#################################################################################
+##
+## Author:  Nat Goodman
+## Copyright (C) 2017 Nat Goodman
+##
+## This software is open source, distributed under the MIT License. See LICENSE
+## file at https://github.com/natgoodman/NewPro/FDR/LICENSE
+##
+#################################################################################
+```
+<style type="text/css"> 
+table.table-arg tr td {vertical-align:middle; text-align:left;} 
+pre, code {white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;}
+</style>
+<table class="table table-striped table-condensed table-bordered table-arg" style="table-layout: fixed; margin-left: auto; margin-right: auto; width: 90%">
+<colgroup> <col style="width:15%;"><col style="width:50%;"><col style="width:25%;"> </colgroup>
+<thead>
+<tr> <th>argument</th><th>meaning</th><th>default</th> </tr>
+</thead>
+<tbody>
+<tr> <td>`prop.true`</td><td>fraction of cases where where there is a real effect.</td><td>`seq(0.1, 0.9, by = 0.2)`</td> </tr>
+<tr> <td>`m`</td><td>number of iterations.</td><td>`1e4`</td> </tr>
+<tr> <td>`n`</td><td>sample size.</td><td>`16`</td> </tr>
+<tr> <td>`d`</td><td>standardized effect size (aka *Cohen's d*)</td><td>`c(0.25, 0.5, 0.75, 1, 2)`</td> </tr>
+<tr> <td>`pwr`</td><td>power. if set, program adjusts `d` to achieve power.</td><td>`NA`</td> </tr>
+<tr> <td>`sig.level`</td><td>significance level for power calculation</td><td>`0.05`</td> </tr>
+<tr> <td>`pval.plot`</td><td>p-values for which we plot results</td><td>`c(1e-03, 0.01, 0.03, 0.05, 0.1)`</td> </tr>
+<tr> <td>`scriptname`</td><td>script name. Used to construct output directory path names.</td><td>`"swfdr_base"`</td> </tr>
+<tr> <td>`datadir`</td><td>path name of directory for data files.</td><td>`"data/swfdr_base"`</td> </tr>
+<tr> <td>`figdir`</td><td>path name of directory for plots.</td><td>`"figure/swfdr_base"`</td> </tr>
+<tr> <td>`save`</td><td>logical. sets `save.rdata` and `save.plot`</td><td>`FALSE`</td> </tr>
+<tr> <td>`save.rdata`</td><td>if TRUE, save parameters and results (actually, all global variables) in RData format. The output filename is `globals.RData` in directory `datadir`.</td><td>`FALSE` (set by `save`)</td> </tr>
+<tr> <td>`save.txt`</td><td>save simulation and interpolation results as tab-delimited text files. The output filenames are `sim.txt` amd `interp.txt` in directory `datadir`. **CAUTION: big & slow!**</td><td>`FALSE`</td> </tr>
+<tr> <td>`save.plot`</td><td>if TRUE, save plots as png files in `figdir`. The output filenames are `plot_byd.png`, `plot_byprop.png`, `plot_vsd.png`, `plot_vsprop.png`</td><td>`FALSE` (set by `save`)</td> </tr>
+<tr> <td>`clean`</td><td>logical. sets `clean.data` and `clean.fig`.</td><td>`FALSE`</td> </tr>
+<tr> <td>`clean.data`</td><td>if TRUE, delete contents of datadir and start fresh</td><td>`FALSE` (set by `clean`)</td> </tr>
+<tr> <td>`clean.fig`</td><td>if TRUE, delete contents of figdir and start fresh</td><td>`FALSE` (set by `clean`)</td> </tr>
+</tbody> </table>

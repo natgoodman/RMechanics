@@ -1,0 +1,10 @@
+---
+title: 'SWFDR: Exercises'
+author: "Nathan (Nat) Goodman"
+date: "June 1, 2017"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+Placeholder document.

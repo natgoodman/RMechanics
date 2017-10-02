@@ -1,0 +1,31 @@
+```{r echo=FALSE, eval=FALSE}
+#################################################################################
+## R markdown User Guide child document generated from 
+## script/swfdr_base.Rxl and script/swfdr_base.R by tool/rdoc.pl.
+#################################################################################
+##
+## Author:  Nat Goodman
+## Copyright (C) 2017 Nat Goodman
+##
+## This software is open source, distributed under the MIT License. See LICENSE
+## file at https://github.com/natgoodman/NewPro/FDR/LICENSE
+##
+#################################################################################
+```
+
+
+### `doit` - *Do the work.*
+
+#### Description
+
+Runs simulation (via `dosim`), interpolates relevant columns of the simulation results at fixed p-values (via `dointerp`), and plots the results and optionally save the plots (via `doplot`).
+
+#### Usage
+
+```{r eval=FALSE}
+doit=function()
+```
+
+#### Value
+
+This function is invoked for its side-effect. It has no return value.

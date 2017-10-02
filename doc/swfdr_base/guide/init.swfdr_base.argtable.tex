@@ -1,0 +1,42 @@
+```{r echo=FALSE, eval=FALSE}
+#################################################################################
+## R markdown User Guide argument table child document generated from 
+## script/swfdr_base.Rxl and script/swfdr_base.R by tool/rdoc.pl.
+#################################################################################
+##
+## Author:  Nat Goodman
+## Copyright (C) 2017 Nat Goodman
+##
+## This software is open source, distributed under the MIT License. See LICENSE
+## file at https://github.com/natgoodman/NewPro/FDR/LICENSE
+##
+#################################################################################
+```
+\begingroup
+\setlength{\tabcolsep}{10pt}
+\renewcommand{\arraystretch}{1.2}
+\centering
+\begin{tabular}{m{\dimexpr0.15\columnwidth-\columnsep}m{\dimexpr0.50\columnwidth-\columnsep}m{\dimexpr0.25\columnwidth-\columnsep}}
+\toprule
+argument & meaning & default\\
+\midrule
+\texttt{prop.true} & fraction of cases where where there is a real effect. & \texttt{seq(0.1, 0.9, by = 0.2)} \\
+\texttt{m} & number of iterations. & \texttt{1e4} \\
+\texttt{n} & sample size. & \texttt{16} \\
+\texttt{d} & standardized effect size (aka \textit{Cohen's d}) & \texttt{c(0.25, 0.5, 0.75, 1, 2)} \\
+\texttt{pwr} & power. if set, program adjusts \texttt{d} to achieve power. & \texttt{NA} \\
+\texttt{sig.level} & significance level for power calculation & \texttt{0.05} \\
+\texttt{pval.plot} & p-values for which we plot results & \texttt{c(1e-03, 0.01, 0.03, 0.05, 0.1)} \\
+\texttt{scriptname} & script name. Used to construct output directory path names. & \texttt{"swfdr\_base"} \\
+\texttt{datadir} & path name of directory for data files. & \texttt{"data/swfdr\_base"} \\
+\texttt{figdir} & path name of directory for plots. & \texttt{"figure/swfdr\_base"} \\
+\texttt{save} & logical. sets \texttt{save.rdata} and \texttt{save.plot} & \texttt{FALSE} \\
+\texttt{save.rdata} & if TRUE, save parameters and results (actually, all global variables) in RData format. The output filename is \texttt{globals.RData} in directory \texttt{datadir}. & \texttt{FALSE} (set by \texttt{save}) \\
+\texttt{save.txt} & save simulation and interpolation results as tab-delimited text files. The output filenames are \texttt{sim.txt} amd \texttt{interp.txt} in directory \texttt{datadir}. \textbf{CAUTION: big \& slow!} & \texttt{FALSE} \\
+\texttt{save.plot} & if TRUE, save plots as png files in \texttt{figdir}. The output filenames are \texttt{plot\_byd.png}, \texttt{plot\_byprop.png}, \texttt{plot\_vsd.png}, \texttt{plot\_vsprop.png} & \texttt{FALSE} (set by \texttt{save}) \\
+\texttt{clean} & logical. sets \texttt{clean.data} and \texttt{clean.fig}. & \texttt{FALSE} \\
+\texttt{clean.data} & if TRUE, delete contents of datadir and start fresh & \texttt{FALSE} (set by \texttt{clean}) \\
+\texttt{clean.fig} & if TRUE, delete contents of figdir and start fresh & \texttt{FALSE} (set by \texttt{clean}) \\
+\bottomrule
+\end{tabular}
+\endgroup
